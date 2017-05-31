@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/mman.h>
+
+#include "channel.h"
+
+/*declaration de la fonction channel_create */
+/*closed = 0 : le channel est ouvert, closed = 1 : le channel est fermer*/
+struct mandel_reply {
+    short int x, y;
+    short int count;
+    short int data[100];
+};
+
+struct channel *channel_create(int eltsize, int size, int flags){
+	
+	if ( ( size == 0 ) || ( flags == CHANNEL_PROCESS_SHARED ) ) {
+        errno = ENOSYS;
+        return NULL;
+    }
+
+	struct channel *canel = malloc(sizeof(channel1));
+	if(canel != NULL){
+				
+	canel->size = size;
+	canel->eltsize = eltsize;
+	canel->closed = 0;
+	canel->count = 0;
+	canel->data = mmap(NULL, (size * eltsize),PROT_READ | PROT_WRITE,MAP_SHARED | MAP_ANONYMOUS,-1, 0);
+	canel->pread = canel->data;
+	canel->pwrite = canel->data;
+	canel->channel_end = canel->data +(eltsize * (size - 1));
+
+	pthread_cond_init (&canel->full,NULL);
+	pthread_cond_init (&canel->empty,NULL);
+	pthread_mutex_init (&canel->v,NULL);
+
+	if(canel->data == MAP_FAILED)
+		{
+			return NULL;
+		}
+	}
+	return canel;
+}
+
+/*declaration de la fonction destroy */
+void channel_destroy(struct channel *channel){
+	if(channel != NULL){
+		free(channel);
+		}
+	else{
+		perror("Error : DESTROY");
+		}
+}
+
+/*declaration de la fonction channel_send */
+int channel_send(struct channel *channel, const void *data){	
+
+	if(channel->closed == 1){
+		errno = EPIPE; 
+		return -1;
+	}		
+
+	pthread_mutex_lock(&channel->v);
+
+		while(channel->count >= channel->size )
+			pthread_cond_wait(&channel->full, &channel->v);
+	
+		channel->count = channel->count + 1;
+
+		memcpy(channel->pwrite, data, channel->eltsize);
+
+		if(channel->pwrite == channel->channel_end){
+			channel->pwrite = channel->data;
+		}else{
+			channel->pwrite = channel->pwrite + channel->eltsize;
+		}
+
+		pthread_cond_signal(&channel->empty);
+
+	pthread_mutex_unlock(&channel->v);
+			
+	return 1;
+}
+
+/*declaration de la fonction channel_close */
+int channel_close(struct channel *channel){
+
+	switch(channel->closed){
+	case 1 :
+						return 0;
+	case 0 :{
+					  channel->closed = 1;
+					  return 1;
+					}
+	default : {
+						errno = E_CLOSE;	
+						return -1;
+					}
+	}
+}
+
+/*declaration de la fonction channel_recv*/
+int channel_recv(struct channel *channel, void *data){
+	
+	if(channel->closed == 1 && channel->count == 0){
+		return 0;
+	}else{
+	
+	pthread_mutex_lock(&channel->v);
+
+		while(channel->count <= 0 )
+			pthread_cond_wait(&channel->empty, &channel->v);
+
+		memcpy(data, channel->pread, channel->eltsize);
+		
+		if(channel->pread == channel->channel_end){
+			channel->pread = channel->data;
+		}else{
+			channel->pread = channel->pread + channel->eltsize;
+		}
+
+		channel->count = channel->count - 1;
+
+		pthread_cond_signal(&channel->full);
+
+	pthread_mutex_unlock(&channel->v);
+		
+	return 1;
+	}
+}
+/* fin */
