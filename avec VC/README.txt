@@ -10,13 +10,13 @@ struct channel{
 
 struct channel *channel_create(int eltsize, int size, int flags){
  on crré un channel et on enitialisent les champs 
- on allou la mem pour data de taille eltsize * size
+ on allou la memoire pour data de taille eltsize * size
  on enitialise pread et pwrite
- on retiurne le channel crée 
+ on retourne le channel crée 
 
 }
 void channel_destroy(struct channel *channel){
- detruire le channel on libérent la mem de data 
+ detruire le channel on libérent la memoire de data 
 }
 
 
@@ -24,7 +24,7 @@ int channel_send(struct channel *channel, const void *data){
 si le channel est fermé on positionne errno et on retourne -1
 sinon 
 	si le channel n'est pas plein on ecrit l'élement
-	sinon on bloque jusque la libération d'un l'élément
+	sinon on bloque jusque la libération d'un élément
 
 }
 
@@ -38,14 +38,6 @@ int channel_close(struct channel *channel){
 int channel_recv(struct channel *channel, void *data){
  si le channel est fermé on positionne errno et on retourne 0
  sinon 
-	si le channel n'est pas vide on ecrit l'élement
-	sinon on bloque jusque la libération d'un l'élément
+	si le channel n'est pas vide on lis l'élement
+	sinon on bloque jusque la l'écriture d'un élément
 }
-
-
-et kami et dia vent faire le reste vous devez géré les semaphores 
-
-
-et seddik vas se reposé "ya3yaaaaaaaaaaaaaaaaaaaaaaaa"
-
-
