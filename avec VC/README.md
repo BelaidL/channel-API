@@ -69,7 +69,7 @@ int channel_close(struct channel *channel)
 La lecture des données se fait à l'aide de la fonction *channel_recv*, elle prend en arguments le canal et une variable vers la quelle la donnée sera lu.
 
 ```
-int channel_recv(struct channel *channel, void *data)
+int channel_recv(struct channel *channel, void *data);
 ```
 ### logique de la fonction
 ```
