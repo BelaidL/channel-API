@@ -14,7 +14,7 @@ struct channel{
 };
 ```
 ## Création d'un canal
-La création et l'initialisation du canal se font à l'aide de la fonction *channel_create* qui prend en arguments le nombre maximume d'éléments ainsi la taille maximale de chaque élément du canal, si la creation du canal est réussi, la fonction renvoie un pointeur vers le canal créé.
+La création et l'initialisation du canal se font à l'aide de la fonction **channel_create** qui prend en arguments le nombre maximume d'éléments ainsi la taille maximale de chaque élément du canal, si la creation du canal est réussi, la fonction renvoie un pointeur vers le canal créé.
 
 ```
 struct channel *channel_create(int eltsize, int size, int flags){
@@ -25,7 +25,7 @@ struct channel *channel_create(int eltsize, int size, int flags){
 }
 ```
 ## Libération du canal
-La libération du canal se fait à laide de la fonction *channel_distroy* qui prend en arguments le canal à libérer, la fonction retourne -1 au cas d'erreur.
+La libération du canal se fait à laide de la fonction **channel_distroy** qui prend en arguments le canal à libérer, la fonction retourne -1 au cas d'erreur.
 
 ```
 void channel_destroy(struct channel *channel){
@@ -37,7 +37,7 @@ void channel_destroy(struct channel *channel){
 }
 ```
 ## Envoie des données dans le canal
-L'écriture des données dans le canal se fait à l'aide de la fonction *channel_send*, elle prend en argummants le canal dans le quel on veut écrire et la données à écrire.
+L'écriture des données dans le canal se fait à l'aide de la fonction **channel_send**, elle prend en argummants le canal dans le quel on veut écrire et la données à écrire.
 
 ```
 int channel_send(struct channel *channel, const void *data){
@@ -52,7 +52,7 @@ int channel_send(struct channel *channel, const void *data){
 }
 ```
 ## Fermeture de canal
-La fermuture du canal se fait à l'aide de la fionction *channel_close*, elle prend en argument le canal à fermer, elle retourne -1 au cas d'erreur.
+La fermuture du canal se fait à l'aide de la fionction **channel_close**, elle prend en argument le canal à fermer, elle retourne -1 au cas d'erreur.
 
 ```
 int channel_close(struct channel *channel){
@@ -63,7 +63,7 @@ int channel_close(struct channel *channel){
 }
 ```
 ## Reciption des données 
-La lecture des données se fait à l'aide de la fonction *channel_recv*, elle prend en arguments le canal et une variable vers la quelle la donnée sera lu.
+La lecture des données se fait à l'aide de la fonction **channel_recv**, elle prend en arguments le canal et une variable vers la quelle la donnée sera lu.
 
 ```
 int channel_recv(struct channel *channel, void *data){
