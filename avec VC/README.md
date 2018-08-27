@@ -55,10 +55,7 @@ int channel_send(struct channel *channel, const void *data){
 La fermuture du canal se fait à l'aide de la fionction *channel_close*, elle prend en argument le canal à fermer, elle retourne -1 au cas d'erreur.
 
 ```
-int channel_close(struct channel *channel)
-```
-
-{
+int channel_close(struct channel *channel){
 	// on verifie channel->closeed 
 	si (c'est 1) : on retourne 0
 	si (c'est 0) : on retourne 1
@@ -69,11 +66,7 @@ int channel_close(struct channel *channel)
 La lecture des données se fait à l'aide de la fonction *channel_recv*, elle prend en arguments le canal et une variable vers la quelle la donnée sera lu.
 
 ```
-int channel_recv(struct channel *channel, void *data);
-```
-### logique de la fonction
-```
-{
+int channel_recv(struct channel *channel, void *data){
  si le channel est fermé 
  	on positionne errno et on retourne 0
  sinon {
