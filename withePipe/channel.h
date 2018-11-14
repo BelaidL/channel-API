@@ -1,19 +1,15 @@
 #include <pthread.h>
 
-/*structur du channel */
+/**
+* channel struct
+**/
 
-typedef struct channel channel1;
+typedef struct channel channel;
 struct channel{
 	int closed;
 	unsigned int size;
 	unsigned int eltsize;
-	unsigned int count;
-	void *data;
-	void *pread;
-	void *pwrite;
-	void *channel_end;
-	pthread_mutex_t v;
-	pthread_cond_t full , empty;
+	int fd[2];
 	};
 /* flags */
 #define CHANNEL_PROCESS_SHARED 1

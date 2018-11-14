@@ -8,34 +8,35 @@
 
 #include "channel.h"
 
-/*declaration de la fonction channel_create */
-/*closed = 0 : le channel est ouvert, closed = 1 : le channel est fermer*/
+/**
+*	channel->closed == 0 : the channel is open;
+* channel->closed == 1 : the channel is closed;
+**/
 
 struct channel *channel_create(int eltsize, int size, int flags){
 	
-	if ( ( size == 0 ) || ( flags == CHANNEL_PROCESS_SHARED ) ) {
+	if ((size == 0) || (flags == CHANNEL_PROCESS_SHARED)) {
         errno = ENOSYS;
         return NULL;
     }
 
-	struct channel *canel = malloc(sizeof(channel));
-	if(canel != NULL){
+	struct channel *c = malloc(sizeof(channel));
+	if(c != NULL){
 				
-	canel->size = size;
-	canel->eltsize = eltsize;
-	canel->closed = 0;
+	c->size = size;
+	c->eltsize = eltsize;
+	c->closed = 0;
 	
-	int p = pipe(canel->fd);
+	int p = pipe(c->fd);
 
 	if(p < 0)
 		{
 			return NULL;
 		}
 	}
-	return canel;
+	return c;
 }
 
-/*declaration de la fonction destroy */
 void channel_destroy(struct channel *channel){
 	if(channel != NULL){
 		free(channel);
@@ -45,7 +46,6 @@ void channel_destroy(struct channel *channel){
 		}
 }
 
-/*declaration de la fonction channel_send */
 int channel_send(struct channel *channel, const void *data){	
 
 	if(channel->closed == 1){
@@ -63,7 +63,6 @@ int channel_send(struct channel *channel, const void *data){
 	return 1;
 }
 
-/*declaration de la fonction channel_close */
 int channel_close(struct channel *channel){
 
 	switch(channel->closed){
@@ -80,7 +79,6 @@ int channel_close(struct channel *channel){
 	}
 }
 
-/*declaration de la fonction channel_recv*/
 int channel_recv(struct channel *channel, void *data){
 	
 	if(channel->closed == 1){
@@ -96,4 +94,4 @@ int channel_recv(struct channel *channel, void *data){
 	return 1;
 	}
 }
-/* fin */
+
